@@ -13,16 +13,14 @@ class PostFactory extends Factory
     public function definition(): array
     {
         return [
-            // pastikan SELALU ada user agar FK tidak null
             'user_id'      => User::factory(),
             'title'        => $this->faker->unique()->sentence(4),
             'content'      => $this->faker->paragraphs(3, true),
             'is_draft'     => false,
-            'published_at' => now()->subMinutes(rand(1, 2880)), // <= now() → Active
+            'published_at' => now()->subMinutes(rand(1, 1440)), // default Active
         ];
     }
 
-    /** Draft: is_draft = true, published_at boleh null */
     public function draft(): self
     {
         return $this->state(fn () => [
@@ -31,7 +29,6 @@ class PostFactory extends Factory
         ]);
     }
 
-    /** Scheduled: is_draft = false, published_at > now() */
     public function scheduled(): self
     {
         return $this->state(fn () => [
