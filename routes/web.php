@@ -14,15 +14,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 });
 
-Route::resource('posts', PostController::class)->only([
-    'index', 'create', 'show', 'edit'
-]);
 
-// Write ops (wajib auth)
+Route::resource('posts', PostController::class)->only(['index', 'show', 'create', 'edit']);
+
+// 🔹 Protected routes (dengan auth)
 Route::middleware('auth')->group(function () {
-    Route::post('posts', [PostController::class, 'store'])->name('posts.store');
-    Route::match(['put', 'patch'], 'posts/{post}', [PostController::class, 'update'])->name('posts.update');
-    Route::delete('posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+   Route::resource('posts', PostController::class)->only(['store', 'update', 'destroy']);
 });
 
 require __DIR__.'/settings.php';
